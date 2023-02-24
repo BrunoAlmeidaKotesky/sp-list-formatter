@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "useDefineForClassFields": true,
+    "moduleResolution": "Node",
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "outDir": "dist",
+    "target": "es6",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "sourceMap": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["lib", "lib/index.ts", "tests/**/*.ts"],
+}
