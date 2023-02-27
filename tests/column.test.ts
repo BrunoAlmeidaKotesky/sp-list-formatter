@@ -6,7 +6,7 @@ it('Should generate the most basic column formatting', () => {
         .addChildren((child) =>
             child
                 .addElement({ tag: 'div' }, (div) =>
-                    div.addElement({ tag: 'span', style: [{ color: 'black' }] },
+                    div.addElement({ tag: 'span', style: { color: 'black' } },
                         (child) => child.addElement({ tag: 'span' }).addElement({ tag: 'span' })
                     )
                 )

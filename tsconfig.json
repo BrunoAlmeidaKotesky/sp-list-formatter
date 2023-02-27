@@ -19,5 +19,5 @@
     "sourceMap": true,
     "types": ["vitest/globals"]
   },
-  "include": ["lib", "lib/index.ts", "tests/**/*.ts"],
+  "include": ["lib", "lib/index.ts", "tests/**/*.ts", "lib/**/*.ts"],
 }
