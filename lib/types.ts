@@ -4,7 +4,7 @@ export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;
 export type FormatterOptions = {
     tag: ElementTypes,
-    attrs?: AttributesConfig;
+    attribute?: AttributesConfig;
     style?: StylesConfig;
     /**An optional property that is meant for debugging. It outputs error messages and logs warnings to the console. */
     debugMode?: boolean;
@@ -85,13 +85,13 @@ export interface FilePreviewProps {
     brandTypeIconStyle?: StylesConfig;
 }
 
-type DirectionalHints = 
+export type DirectionalHints = 
 "bottomAutoEdge" | "bottomCenter" | "bottomLeftEdge" | "bottomRightEdge" | 
 "leftBottomEdge" | "leftCenter" | "leftTopEdge" | 
 "rightBottomEdge" | "rightCenter" | "rightTopEdge" | 
 "topAutoEdge" | "topCenter" | "topLeftEdge" | "topRightEdge";
 
-type Operators = 
+export type Operators = 
 "+" |
 "-" |
 "/" |
@@ -144,7 +144,7 @@ type Operators =
 "removeFrom" |
 "split"
 
-type Operands = {operator: Operators, operands: Operands}[] | string | any[];
+export type Operands = {operator: Operators, operands: Operands}[] | string | any[];
 
 export interface InitialState<Builder> {
     addChildren: (builder: Builder) => ChildrenState<Builder>;

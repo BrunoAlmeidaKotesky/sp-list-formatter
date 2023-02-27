@@ -13,13 +13,9 @@ export class ListFormatterBuilder {
     }
 
     private static configFields(obj: Record<string, any>, config: FormatterOptions) {
-        if (config?.style)
-            obj.style = { ...config?.style };
-        if (config?.attrs)
-            obj.attributes = { ...config?.attrs }
-        if (config?.debugMode)
-            obj.debugMode = config.debugMode;
-        
+        Object.entries(config).forEach(([key, value]) => {
+            obj[key] = value;
+        });
     }
 
     addElement(
@@ -49,6 +45,15 @@ export class ListFormatterBuilder {
         const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
         //@ts-ignore
         this.result.children.push(...childBuilder.build().children);
+        return this;
+    }
+
+    addText(text: string): this {
+        this.result.txtContent = text;
+        if(this.result.children) {
+            delete this.result.children;
+            console.warn('Text content was added to an element that already had children. The children will be removed.');
+        }
         return this;
     }
 
