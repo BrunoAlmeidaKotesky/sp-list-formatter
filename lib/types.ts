@@ -4,7 +4,7 @@ export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;
 export type FormatterOptions = {
     tag: ElementTypes,
-    attribute?: AttributesConfig;
+    attributes?: AttributesConfig;
     style?: StylesConfig;
     /**An optional property that is meant for debugging. It outputs error messages and logs warnings to the console. */
     debugMode?: boolean;

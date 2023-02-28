@@ -15,5 +15,8 @@
     "vite": "^4.1.0",
     "vite-plugin-dts": "^2.0.2",
     "vitest": "^0.28.5"
+  },
+  "dependencies": {
+    "parse5": "^7.1.2"
   }
 }
