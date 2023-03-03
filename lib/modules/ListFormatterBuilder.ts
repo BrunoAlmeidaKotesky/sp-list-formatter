@@ -1,6 +1,6 @@
 import { SCHEMA } from "../constants";
 import type { ElementTypes } from '../constants';
-import type { FormatterOptions, InitialState, ChildrenState } from '../types';
+import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '../types';
 
 export class ListFormatterBuilder {
     private result: Record<string, any> = { $schema: SCHEMA };
@@ -13,6 +13,7 @@ export class ListFormatterBuilder {
     }
 
     private static configFields(obj: Record<string, any>, config: FormatterOptions) {
+        if(!config) return;
         Object.entries(config).forEach(([key, value]) => {
             obj[key] = value;
         });
@@ -25,7 +26,7 @@ export class ListFormatterBuilder {
         if (!this.result.children) {
             this.result.children = [];
         }
-        const element: Record<string, any> = { elmType: config.tag };
+        const element: Record<string, any> = { elmType: config.elmType };
         ListFormatterBuilder.configFields(element, config);
         if (callback) {
             const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
@@ -57,7 +58,7 @@ export class ListFormatterBuilder {
         return this;
     }
 
-    build(): Record<string, any> {
-        return this.result;
+    build(): JsonSchema {
+        return this.result as JsonSchema;
     }
 }

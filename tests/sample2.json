@@ -1,0 +1,175 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+    "elmType": "div",
+    "style": {
+        "display": {
+            "operator": "?",
+            "operands": [
+                {
+                    "operator": "&&",
+                    "operands": [
+                        {
+                          "operator": "!=",
+                          "operands": [
+                            "[$LinkParaOTeams]",
+                            ""
+                          ]
+                        },
+                        {
+                          "operator": "!=",
+                          "operands": [
+                            "[$LinkParaOPlanner]",
+                            ""
+                          ]
+                        },
+                        {
+                          "operator": "!=",
+                          "operands": [
+                            "[$LinkParaOProjeto]",
+                            ""
+                          ]
+                        }
+                      ]
+                },
+                "grid",
+                "none"
+            ]
+            
+        }
+    },
+    "children": [
+        {
+            "elmType": "span",
+            "txtContent": "Informações adicionais do Projeto",
+            "style": {
+                "font-size": "16px",
+                "font-weight": "600"
+            }
+        },
+        {
+            "elmType": "div",
+            "style": {
+                "display": "flex",
+                "margin": "16px 0",
+                "flex-direction": "column"
+            },
+            "children": [
+                {
+                    "elmType": "a",
+                    "attributes": {
+                        "href": "[$LinkParaOTeams]",
+                        "target": "_blank"
+                    },
+                    "style": {
+                        "text-decoration": "none",
+                        "color": "black",
+                        "height": "42px",
+                        "display": "flex",
+                        "align-items": "center"
+                    },
+                    "children": [
+                        {
+                            "elmType": "span",
+                            "txtContent": "Abrir canal da equipe no Teams",
+                            "style": {
+                                "white-space": "nowrap",
+                                "text-decoration": "underline"
+                            }
+                        },
+                        {
+                            "elmType": "span",
+                            "attributes": {
+                                "iconName": "TeamsLogo",
+                                "class": "sp-field-quickActions"
+                            },
+                            "style": {
+                                "color": "#8A338A",
+                                "padding-left": "8px",
+                                "font-size": "16px"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "elmType": "a",
+                    "attributes": {
+                        "href": "[$LinkParaOPlanner]",
+                        "target": "_blank"
+                    },
+                    "style": {
+                        "text-decoration": "none",
+                        "color": "black",
+                        "height": "42px",
+                        "display": "flex",
+                        "align-items": "center"
+                    },
+                    "children": [
+                        {
+                            "elmType": "span",
+                            "txtContent": "Visualizar Tarefas no Planner",
+                            "style": {
+                                "white-space": "nowrap",
+                                "text-decoration": "underline"
+                            }
+                        },
+                        {
+                            "elmType": "span",
+                            "attributes": {
+                                "iconName": "PlannerLogo",
+                                "class": "sp-field-quickActions"
+                            },
+                            "style": {
+                                "color": "#327535",
+                                "padding-left": "8px",
+                                "font-size": "16px"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "elmType": "a",
+                    "attributes": {
+                        "href": "[$LinkParaOProjeto]",
+                        "target": "_blank"
+                    },
+                    "style": {
+                        "text-decoration": "none",
+                        "color": "black",
+                        "height": "42px",
+                        "display": "flex",
+                        "align-items": "center"
+                    },
+                    "children": [
+                        {
+                            "elmType": "span",
+                            "txtContent": "Visualizar Documentos do Projeto",
+                            "style": {
+                                "white-space": "nowrap",
+                                "text-decoration": "underline"
+                            }
+                        },
+                        {
+                            "elmType": "span",
+                            "attributes": {
+                                "iconName": "FabricFolder",
+                                "class": "sp-field-quickActions"
+                            },
+                            "style": {
+                                "color": "#F2BD02",
+                                "padding-left": "8px",
+                                "font-size": "16px"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "elmType": "div",
+            "style": {
+                "height": "1px",
+                "border-top": "1px solid #E0E0E0"
+            }
+        }
+    ]
+}

@@ -1,44 +1,77 @@
 
-import {parse} from 'parse5';
-import { AttributesConfig, ChildrenState, FormatterOptions, StylesConfig,  } from '../types';
+import { parse, ParserOptions } from 'parse5';
 import { ListFormatterBuilder } from './ListFormatterBuilder';
-import type { ElementTypes } from '../constants';
-import { TextNode } from 'parse5/dist/tree-adapters/default';
+import { ATTRIBUTES, DATA_ATRIBUTES } from '../constants';
+import type { Attributes, ElementTypes, DataAttributes } from '../constants';
+import type { TextNode, Element, DefaultTreeAdapterMap } from 'parse5/dist/tree-adapters/default';
+import type { AttributesConfig, FormatterOptions, StylesConfig, JsonSchema } from '../types';
+import { Attribute } from 'parse5/dist/common/token';
 
-const styleToObj = (styles: string) => styles
-    .split(";")
-    .map(style => style.split(":").map(part => part.trim()))
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}) as StylesConfig;
+export class HtmlToListParser {
+    #processNodeCount = 0;
+    constructor(private parserConfig?:  ParserOptions<DefaultTreeAdapterMap> | undefined) {}
+     #styleToObj(styles: string): StylesConfig { 
+        return styles
+        ?.split(";")
+        ?.map(style => style.split(":").map(part => part.trim()))
+        ?.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+    }
 
-const findFirstNode = (html: string) => {
-    const doc = parse(html, { scriptingEnabled: false });
-    const htmlNode = doc.childNodes[0];
-    if (!(htmlNode.nodeName === 'html' && htmlNode.childNodes[1].nodeName === 'body'))
-        throw new Error('Invalid html');
-    const firstNode = htmlNode.childNodes[1].childNodes[0];
-    if(!firstNode) throw new Error('Could not find the root node');
-    return firstNode;
-}
+    #findFirstNode = (html: string) => {
+        const doc = parse(html, { scriptingEnabled: false, ...this?.parserConfig });
+        const htmlNode = doc.childNodes[0];
+        if (!(htmlNode.nodeName === 'html' && htmlNode.childNodes[1].nodeName === 'body'))
+            throw new Error('Invalid html, you must not have a body or html tag');
+        const firstNode = htmlNode.childNodes[1].childNodes[0];
+        if (!firstNode) throw new Error('Could not find the root node');
+        return firstNode;
+    }
+    
+    #parseDataAttribValue(value: string): string | boolean | object {
+        return value.startsWith('{') ? JSON.parse(value) : value === 'true' ? true : value === 'false' ? false : value;
+    }
 
-function htmlToListFormatterParser(html: string): Record<string, any> {
-    const rootNode = findFirstNode(html);
-    const builder = new ListFormatterBuilder();
+    #addDataAttributes = (attrs: Attribute[], element: FormatterOptions) => {
+        const validAttrs: Map<DataAttributes, keyof FormatterOptions> = new Map([
+            ['data-debug-mode', 'debugMode']
+        ]);
+        const dataAttributes = attrs.reduce((acc: Partial<FormatterOptions>, attr) => {
+            const name = attr.name as DataAttributes;
+            if (DATA_ATRIBUTES.includes(name)) {
+                const key = validAttrs.get(name)!;
+                // @ts-ignore
+                acc[key] = this.#parseDataAttribValue(attr.value);    
+            }
+            return acc;
+        }, {});
+        for (const [k, v] of Object.entries(dataAttributes) as [keyof FormatterOptions, unknown][]) {
+            //@ts-ignore
+            element[k] = v;
+        }
+    }
 
-    function processNode(node: typeof rootNode, parentBuilder: ListFormatterBuilder) {
-        if (node.nodeName === ElementType) {
+    #processNode(node: Element, parentBuilder: ListFormatterBuilder) {
+        if (node.nodeName !== 'html' && node.nodeName !== 'body' && node.nodeName !== '#text') {
             const element: FormatterOptions = {
-                tag: node.tagName.toLowerCase() as ElementTypes,
-                attributes: node.attributes.reduce((acc: AttributesConfig, attr) => {
-                    if(attr.name !== 'style')
-                        acc[attr.name] = attr.value;
-                    return acc;
-                }, {}),
-                style: styleToObj(node.attributes.find((attr) => attr.name === 'style')!?.value)
+                elmType: node.tagName.toLowerCase() as ElementTypes,
             };
-            const childrenBuilder = parentBuilder.addElement(element);
-            node.childNodes.forEach((childNode: any) => processNode(childNode, childrenBuilder));
+            const attributes = node?.attrs.reduce((acc: AttributesConfig, attr) => {
+                if (attr.name !== 'style' && ATTRIBUTES.includes(attr.name as Attributes))
+                    acc[attr.name as Attributes] = attr.value;
+                return acc;
+            }, {});
+            const styles = this.#styleToObj(node.attrs.find((attr) => attr.name === 'style')!?.value);
+            if(styles && Object.keys(styles).length > 0) 
+                element.style = styles;
+            if(attributes && Object.keys(attributes).length > 0) 
+                element.attributes = attributes;
+            this.#addDataAttributes(node.attrs, element);
+            if(this.#processNodeCount !== 1) {
+                const childrenBuilder = parentBuilder.addElement(element) as unknown as ListFormatterBuilder;
+                node.childNodes.forEach((childNode: any) => this.#processNode(childNode, childrenBuilder ));
+            }
         } else if (node.nodeName === '#text') {
-            const text = (node as TextNode)?.value?.trim();
+            const text = (node as unknown as TextNode)?.value?.trim();
             if (text.length > 0) {
                 parentBuilder.addText(text);
             } else {
@@ -47,6 +80,16 @@ function htmlToListFormatterParser(html: string): Record<string, any> {
         }
     }
 
-    processNode(rootNode, builder);
-    return builder.build();
+    /**The HTML string to be parsed as the JSON Schema.
+     * 
+     *You don't need to include `<html>` and `<body>` tags. The parser will find the first node and use it as the root node.
+    */
+    public parse(html: string): JsonSchema {
+        const rootNode = this.#findFirstNode(html);
+        const builder = ListFormatterBuilder.init(rootNode.nodeName as ElementTypes);
+        this.#processNodeCount += 1;
+        this.#processNode(rootNode as Element, builder);
+        this.#processNodeCount = 0;
+        return builder.build();
+    }
 }

@@ -172,8 +172,20 @@ export const ATTRIBUTES = [
 "draggable"
 ] as const;
 
+export const DATA_ATRIBUTES = [
+    'data-debug-mode',
+    'data-for-each',
+    'data-custom-row-actions',
+    'data-default-hover-field',
+    'data-inline-edit',
+    'data-file-preview',
+    'data-operator',
+    'data-operands'
+] as const;
+
 export const SCHEMA = "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json";
 
 export type Styles = typeof STYLES[number];
 export type ElementTypes = typeof ELEMENT_TYPES[number];
 export type Attributes = typeof ATTRIBUTES[number];
+export type DataAttributes = typeof DATA_ATRIBUTES[number];

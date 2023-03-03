@@ -1,0 +1,413 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+  "elmType": "div",
+  "style": {
+    "font-size": "12px"
+  },
+  "txtContent": "[$Status]",
+  "customCardProps": {
+    "formatter": {
+      "elmType": "div",
+      "style": {
+        "display": "=if([$Status] == 'Encerrado', 'none', 'block'"
+      },
+      "children": [
+        {
+          "elmType": "div",
+          "children": [
+            {
+              "elmType": "div",
+              "style": {
+                "padding": "15px 45px 15px 15px"
+              },
+              "children": [
+                {
+                  "elmType": "div",
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "style": {
+                        "font-size": "18px",
+                        "font-weight": "550",
+                        "text-align": "center",
+                        "margin-bottom": "10px"
+                      },
+                      "txtContent": "Ciclo de Vida do Projeto"
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center"
+                  },
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "style": {
+                        "background-color": "#3988FF",
+                        "margin-left": "9px",
+                        "width": "28px",
+                        "height": "28px",
+                        "border-radius": "4px"
+                      },
+                      "children": [
+                        {
+                          "elmType": "span",
+                          "style": {
+                            "font-size": "16px",
+                            "font-weight": "500",
+                            "padding-left": "6px",
+                            "padding-top": "6px",
+                            "color": "#F4F4F5"
+                          },
+                          "txtContent": " ",
+                          "attributes": {
+                            "iconName": "Lightbulb"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "font-size": "16px",
+                        "font-weight": "=if([$Status] == 'Concepção', 'bold', '500')",
+                        "padding-left": "8px"
+                      },
+                      "txtContent": "1. Concepção",
+                      "attributes": {
+                        "class": "='ms-fontColor-' + if([$Status] == 'Concepção', 'blue', 'neutralSecondaryAlt')"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "children": [
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "border-left-style": "solid",
+                        "border-left-color": "=if([$Status] == 'Concepção','#F4F4F5','#3988FF')",
+                        "text-align": "center",
+                        "margin-left": "21px"
+                      },
+                      "attributes": {
+                        "class": "=if([$Status] == 'Concepção','#F4F4F5','#3988FF')"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center"
+                  },
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "style": {
+                        "background-color": {
+                            "operator": "?",
+                            "operands": [
+                              {
+                                "operator": "||",
+                                "operands": [
+                                  {
+                                    "operator": "==",
+                                    "operands": [
+                                      "[$Status]",
+                                      "Planejamento"
+                                    ]
+                                  },
+                                  {
+                                    "operator": "==",
+                                    "operands": [
+                                      "[$Status]",
+                                      "Execução"
+                                    ]
+                                  },
+                                  {
+                                    "operator": "==",
+                                    "operands": [
+                                      "[$Status]",
+                                      "Encerramento"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "#3988FF",
+                              "#F4F4F5"
+                            ]
+                        },
+                        "margin-left": "9px",
+                        "width": "28px",
+                        "height": "28px",
+                        "border-radius": "4px"
+                      },
+                      "children": [
+                        {
+                          "elmType": "span",
+                          "style": {
+                            "font-size": "16px",
+                            "font-weight": "500",
+                            "padding-left": "6px",
+                            "padding-top": "6px",
+                            "color": "white"
+                          },
+                          "txtContent": " ",
+                          "attributes": {
+                            "iconName": "AnalyticsReport",
+                            "class": "='ms-fontColor-' + if([$Status] == 'Planejamento','blue','neutralSecondaryAlt')"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "font-size": "16px",
+                        "font-weight": "=if([$Status] == 'Planejamento', 'bold', '500')",
+                        "padding-left": "8px"
+                      },
+                      "txtContent": "2. Planejamento",
+                      "attributes": {
+                        "class": "='ms-fontColor-' + if([$Status] == 'Planejamento', 'blue', 'neutralSecondaryAlt')"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "children": [
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "border-left-style": "solid",
+                        "border-left-color": {
+                          "operator": "?",
+                          "operands": [
+                            {
+                              "operator": "||",
+                              "operands": [
+                                {
+                                  "operator": "==",
+                                  "operands": [
+                                    "[$Status]",
+                                    "Concepção"
+                                  ]
+                                },
+                                {
+                                  "operator": "==",
+                                  "operands": [
+                                    "[$Status]",
+                                    "Planejamento"
+                                  ]
+                                }
+                              ]
+                            },
+                            "#F4F4F5",
+                            "#3988FF"
+                          ]
+                        },
+                        "margin-left": "21px"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center"
+                  },
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "style": {
+                        "background-color": {
+                            "operator": "?",
+                            "operands": [
+                              {
+                                "operator": "||",
+                                "operands": [
+                                  {
+                                    "operator": "==",
+                                    "operands": [
+                                      "[$Status]",
+                                      "Execução"
+                                    ]
+                                  },
+                                  {
+                                    "operator": "==",
+                                    "operands": [
+                                      "[$Status]",
+                                      "Encerramento"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "#3988FF",
+                              "#F4F4F5"
+                            ]
+                        },
+                        "margin-left": "9px",
+                        "width": "28px",
+                        "height": "28px",
+                        "border-radius": "4px"
+                      },
+                      "children": [
+                        {
+                          "elmType": "span",
+                          "style": {
+                            "font-size": "16px",
+                            "font-weight": "500",
+                            "padding-left": "6px",
+                            "padding-top": "6px",
+                            "color": "white"
+                          },
+                          "txtContent": " ",
+                          "attributes": {
+                            "iconName": "Sync",
+                            "class": "='ms-fontColor-' + if([$Status] == 'Concepção','blue','neutralSecondaryAlt')"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "font-size": "16px",
+                        "font-weight": "=if([$Status] == 'Execução', 'bold', '500')",
+                        "padding-left": "8px"
+                      },
+                      "txtContent": "3. Execução",
+                      "attributes": {
+                        "class": "='ms-fontColor-' + if([$Status] == 'Execução', 'blue', 'neutralSecondaryAlt')"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "children": [
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "border-left-style": "solid",
+                        "border-left-color": {
+                          "operator": "?",
+                          "operands": [
+                            {
+                              "operator": "||",
+                              "operands": [
+                                {
+                                  "operator": "==",
+                                  "operands": [
+                                    "[$Status]",
+                                    "Concepção"
+                                  ]
+                                },
+                                {
+                                  "operator": "==",
+                                  "operands": [
+                                    "[$Status]",
+                                    "Planejamento"
+                                  ]
+                                },
+                                {
+                                  "operator": "==",
+                                  "operands": [
+                                    "[$Status]",
+                                    "Execução"
+                                  ]
+                                }
+                              ]
+                            },
+                            "#F4F4F5",
+                            "#3988FF"
+                          ]
+                        },
+                        "margin-left": "21px"
+                      },
+                      "attributes": {
+                        "class": "='ms-fontColor-' + if([$Status] == 'Encerramento','neutralSecondaryAlt','neutralSecondaryAlt')"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "elmType": "div",
+                  "style": {
+                    "display": "flex",
+                    "align-items": "center"
+                  },
+                  "children": [
+                    {
+                      "elmType": "div",
+                      "style": {
+                        "background-color": "=if([$Status] == 'Encerramento', '#3988FF', '#F4F4F5'",
+                        "margin-left": "9px",
+                        "width": "28px",
+                        "height": "28px",
+                        "border-radius": "4px"
+                      },
+                      "children": [
+                        {
+                          "elmType": "span",
+                          "style": {
+                            "font-size": "16px",
+                            "font-weight": "500",
+                            "padding-left": "6px",
+                            "padding-top": "6px",
+                            "color": "white"
+                          },
+                          "txtContent": " ",
+                          "attributes": {
+                            "iconName": "Bullseye",
+                            "class": "='ms-fontColor-' + if([$Status] == 'Concepção','blue','neutralSecondaryAlt')"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "elmType": "span",
+                      "style": {
+                        "font-size": "16px",
+                        "font-weight": "=if([$Status] == 'Encerramento', 'bold', '500')",
+                        "padding-left": "8px"
+                      },
+                      "txtContent": "4. Encerramento",
+                      "attributes": {
+                        "class": "='ms-fontColor-' + if([$Status] == 'Encerramento', 'blue', 'neutralSecondaryAlt')"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "openOnEvent": "hover",
+    "directionalHint": "bottomCenter",
+    "isBeakVisible": {
+        "operator": "?",
+        "operands": [
+            {
+                "operator": "==",
+                "operands": [
+                    "[$Status]",
+                    "Encerrado"
+                ]
+            },
+            false,
+            true
+        ]
+    }
+  }
+}

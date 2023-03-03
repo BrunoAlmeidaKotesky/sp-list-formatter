@@ -3,7 +3,7 @@ import type { Attributes, Styles, ElementTypes } from "./constants";
 export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;
 export type FormatterOptions = {
-    tag: ElementTypes,
+    elmType: ElementTypes,
     attributes?: AttributesConfig;
     style?: StylesConfig;
     /**An optional property that is meant for debugging. It outputs error messages and logs warnings to the console. */
@@ -38,6 +38,11 @@ export type FormatterOptions = {
     /**Please read https://learn.microsoft.com/en-us/sharepoint/dev/declarative-customization/formatting-syntax-reference */
     operands?: Operands;
 };
+
+interface BaseSchema {
+    $schema: string, children?: JsonSchema[] 
+}
+export interface JsonSchema extends FormatterOptions, BaseSchema {};
 
 export interface DefaultClickAction {
     action: "defaultClick" | "share" | "delete" | "editProps" | "openContextMenu";
