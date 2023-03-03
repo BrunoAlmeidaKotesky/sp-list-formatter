@@ -3,7 +3,7 @@ import type { ElementTypes } from '../constants';
 import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '../types';
 
 export class ListFormatterBuilder {
-    private result: Record<string, any> = { $schema: SCHEMA };
+    public result: Record<string, any> = { $schema: SCHEMA };
 
     static init(elmType: ElementTypes, config?: Omit<FormatterOptions, 'elmType'>): ListFormatterBuilder {
         const builder = new ListFormatterBuilder();
