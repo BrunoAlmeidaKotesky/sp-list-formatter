@@ -1,7 +1,13 @@
 import {HtmlToListParser} from '../lib/modules/HtmlToListParser';
 
 it('Should parse the most basic html string to an valid JSON schema', () => {
-    const result = new HtmlToListParser().parse(`<div style="color: red; background-color: green;"><ul><li><a href="https://github.com">Item 1</a></li><li>Text</li></ul></div>`);
+    const result = new HtmlToListParser().parse(`
+    <div style="color: red; background-color: green;">
+        <ul>
+            <li><a href="https://github.com">Item 1</a></li>
+            <li>Text</li>
+        </ul>
+    </div>`);
     //expect the result to be equal to the expected object
     console.log(JSON.stringify(result, null, 2));
     expect(result).toEqual({

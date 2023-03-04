@@ -13,6 +13,7 @@ export class HtmlToListParser {
      #styleToObj(styles: string): StylesConfig { 
         return styles
         ?.split(";")
+        .filter(Boolean)
         ?.map(style => style.split(":")
         ?.map(part => part.trim()))
         ?.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
@@ -70,12 +71,11 @@ export class HtmlToListParser {
     }
 
     #processNode(node: Element, parentBuilder: ListFormatterBuilder) {
-        if (node.nodeName !== 'html' && node.nodeName !== 'body' && node.nodeName !== '#text') {
+        if (node.nodeName !== 'html' && node.nodeName !== 'body') {
             const element = this.#addNodeData(node);
             if(this.#processNodeCount !== 1) {
-                let tempBuilder: ChildrenState<ListFormatterBuilder> | null = null;
                 if(node?.childNodes?.length > 0) {
-                    tempBuilder = parentBuilder!.addElement(element, self => {
+                    parentBuilder!.addElement(element, self => {
                         node.childNodes.forEach(n => this.#processNode(n as Element, self as unknown as ListFormatterBuilder));
                         return self;
                     });
@@ -85,14 +85,22 @@ export class HtmlToListParser {
                 this.#processNodeCount += 1;
                 node.childNodes.forEach((childNode: any) => this.#processNode(childNode, parentBuilder ));
             }
-        } else if (node.nodeName === '#text') {
+        } /*else if (node.nodeName === '#text') { 
             const text = (node as unknown as TextNode)?.value?.trim();
             if (text.length > 0) {
                 //parentBuilder?.addText(text);
             } else {
                 console.warn('Empty text node found from', node.parentNode?.nodeName);
             }
-        }
+        } */
+    }
+
+    /**Minify the HTML string to just a single line.
+     * 
+     *You don't need to use this method if you are using the `parse` method, since it will minify the HTML string before parsing it.
+    */
+    public inlineHtml(html: string): string {
+        return html.replace(/\n|\t/g, '').replace(/>\s+</g,'><').trim();
     }
 
     /**The HTML string to be parsed as the JSON Schema.
@@ -100,7 +108,8 @@ export class HtmlToListParser {
      *You don't need to include `<html>` and `<body>` tags. The parser will find the first node and use it as the root node.
     */
     public parse(html: string): JsonSchema {
-        const rootNode = this.#findFirstNode(html);
+        const inlineHtml = this.inlineHtml(html);
+        const rootNode = this.#findFirstNode(inlineHtml);
         const builder = ListFormatterBuilder.init(rootNode.nodeName as ElementTypes);
         this.#processNodeCount += 1;
         this.#processNode(rootNode as Element, builder);
