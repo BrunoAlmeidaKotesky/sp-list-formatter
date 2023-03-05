@@ -1,3 +1,4 @@
+import type { FormatterOptions } from "./types";
 
 export const ELEMENT_TYPES = [
     'div',
@@ -182,6 +183,17 @@ export const DATA_ATRIBUTES = [
     'data-operator',
     'data-operands'
 ] as const;
+
+export const ATTRIBUTES_MAP = new Map<DataAttributes, keyof FormatterOptions>([
+    ['data-debug-mode', 'debugMode'],
+    ['data-for-each', 'forEach'],
+    ['data-custom-row-actions', 'customRowAction'],
+    ['data-default-hover-field', 'defaultHoverField'],
+    ['data-file-preview', 'filePreviewProps'],
+    ['data-inline-edit', 'inlineEditField'],
+    ['data-operands', 'operands'],
+    ['data-operator', 'operator']
+]);
 
 export const SCHEMA = "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json";
 

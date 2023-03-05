@@ -1,11 +1,11 @@
 
 import { parse, ParserOptions } from 'parse5';
 import { ListFormatterBuilder } from './ListFormatterBuilder';
-import { ATTRIBUTES, DATA_ATRIBUTES } from '../constants';
+import { ATTRIBUTES, ATTRIBUTES_MAP, DATA_ATRIBUTES, SCHEMA } from '../constants';
 import type { Attributes, ElementTypes, DataAttributes } from '../constants';
 import type { TextNode, Element, DefaultTreeAdapterMap, ChildNode, ParentNode } from 'parse5/dist/tree-adapters/default';
-import type { AttributesConfig, FormatterOptions, StylesConfig, JsonSchema } from '../types';
-import { Attribute } from 'parse5/dist/common/token';
+import type { AttributesConfig, FormatterOptions, StylesConfig, JsonSchema, ChildrenState } from '../types';
+import type { Attribute } from 'parse5/dist/common/token';
 
 export class HtmlToListParser {
     #processNodeCount = 0;
@@ -20,7 +20,7 @@ export class HtmlToListParser {
             ?.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
     }
 
-    #findFirstNode = (html: string) => {
+    #findFirstNode(html: string) {
         const doc = parse(html, { scriptingEnabled: false, ...this?.parserConfig });
         const htmlNode = doc.childNodes[0];
         if (!(htmlNode.nodeName === 'html' && htmlNode.childNodes[1].nodeName === 'body'))
@@ -34,14 +34,11 @@ export class HtmlToListParser {
         return value.startsWith('{') ? JSON.parse(value) : value === 'true' ? true : value === 'false' ? false : value;
     }
 
-    #addDataAttributes = (attrs: Attribute[], element: FormatterOptions) => {
-        const validAttrs: Map<DataAttributes, keyof FormatterOptions> = new Map([
-            ['data-debug-mode', 'debugMode']
-        ]);
+    #addDataAttributes(attrs: Attribute[], element: FormatterOptions) {
         const dataAttributes = attrs.reduce((acc: Partial<FormatterOptions>, attr) => {
             const name = attr.name as DataAttributes;
             if (DATA_ATRIBUTES.includes(name)) {
-                const key = validAttrs.get(name)!;
+                const key = ATTRIBUTES_MAP.get(name)!;
                 // @ts-ignore
                 acc[key] = this.#parseDataAttribValue(attr.value);
             }
@@ -73,9 +70,19 @@ export class HtmlToListParser {
     }
 
     #addFirstNode(builder: ListFormatterBuilder, childNodes: ChildNode[], el: FormatterOptions) {
+        //@ts-ignore
+        el['$schema'] = SCHEMA
         builder.result = el;
         this.#processNodeCount += 1;
         childNodes.forEach((childNode: any) => this.#processNode(childNode, builder));
+    }
+
+    #addChild = (parentNode: ParentNode) => (currentBuilder: ChildrenState<ListFormatterBuilder>) => {
+        parentNode.childNodes.forEach(childNode => {
+            this.#processNodeCount += 1
+            this.#processNode(childNode as Element, currentBuilder as unknown as ListFormatterBuilder);
+        });
+        return currentBuilder;
     }
 
     #processNode(node: Element, parentBuilder: ListFormatterBuilder) {
@@ -84,15 +91,8 @@ export class HtmlToListParser {
         let element: FormatterOptions | null = null;
         if (node?.nodeName !== '#text')
             element = this.#addNodeData(node);
-        if (this.#processNodeCount !== 1 && node?.childNodes?.length > 0 && node?.nodeName !== '#text') {
-            parentBuilder!.addElement(element!, self => {
-                node.childNodes.forEach(node => {
-                    this.#processNodeCount += 1
-                    this.#processNode(node as Element, self as unknown as ListFormatterBuilder);
-                });
-                return self;
-            });
-        }
+        if (this.#processNodeCount !== 1 && node?.childNodes?.length > 0 && node?.nodeName !== '#text')
+            parentBuilder!.addElement(element!, this.#addChild(node));
         else if (this.#processNodeCount === 1) {
             element!.id = 'root';
             this.#addFirstNode(parentBuilder, node.childNodes, element!);
@@ -134,6 +134,7 @@ export class HtmlToListParser {
         this.#processNode(rootNode as Element, builder);
         this.#addTextNodes(builder);
         this.#processNodeCount = 0;
+        builder.removeId = true;
         return builder.build();
     }
 }

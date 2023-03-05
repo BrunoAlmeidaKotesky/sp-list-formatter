@@ -4,6 +4,7 @@ import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '
 
 export class ListFormatterBuilder {
     public result: Record<string, any> = { $schema: SCHEMA };
+    public removeId = false;
 
     static init(elmType: ElementTypes, config?: Omit<FormatterOptions, 'elmType'>): ListFormatterBuilder {
         const builder = new ListFormatterBuilder();
@@ -19,7 +20,7 @@ export class ListFormatterBuilder {
         });
     }
 
-    findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): Record<string, any> {
+    public findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): Record<string, any> {
         let result: Record<string, any> = this.result;
         const search = (node: Record<string, any>) => {
             if(node?.id === id) {
@@ -42,15 +43,15 @@ export class ListFormatterBuilder {
         config: FormatterOptions,
         callback?: (builder: ChildrenState<ListFormatterBuilder>) => ChildrenState<ListFormatterBuilder>
     ): ChildrenState<ListFormatterBuilder> {
-        if (!this.result.children) {
+        if (!this.result.children && !this.result?.txtContent)
             this.result.children = [];
-        }
         const element: Record<string, any> = { elmType: config.elmType };
         ListFormatterBuilder.#configFields(element, config);
         if (callback) {
             const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
             //@ts-ignore
-            element.children = childBuilder.build().children;
+            if(!element.txtContent)
+                element.children = childBuilder.build().children;
         }
         this.result.children.push(element);
         return this as unknown as ChildrenState<ListFormatterBuilder>;
@@ -59,21 +60,12 @@ export class ListFormatterBuilder {
     addChildren(
         callback: (builder: ChildrenState<ListFormatterBuilder>) => ChildrenState<ListFormatterBuilder>
     ): this {
-        if (!this.result.children) {
+        if (!this.result.children && !this.result?.txtContent)
             this.result.children = [];
-        }
         const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
         //@ts-ignore
-        this.result.children.push(...childBuilder.build().children);
-        return this;
-    }
-
-    addText(text: string): this {
-        this.result.txtContent = text;
-        if(this.result.children) {
-            delete this.result.children;
-            console.warn('Text content was added to an element that already had children. The children will be removed.');
-        }
+        if(!this.result?.txtContent)
+            this.result.children.push(...childBuilder.build().children);
         return this;
     }
 
@@ -87,7 +79,7 @@ export class ListFormatterBuilder {
     }
 
     build(): JsonSchema {
-        this.#deleteIds(this.result);
+        if(this.removeId) this.#deleteIds(this.result);
         return this.result as JsonSchema;
     }
 }

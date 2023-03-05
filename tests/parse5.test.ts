@@ -2,10 +2,10 @@ import {HtmlToListParser} from '../lib/modules/HtmlToListParser';
 
 it('Should parse the most basic html string to an valid JSON schema', () => {
     const result = new HtmlToListParser().parse(`
-    <div style="color: red; background-color: green;">
+    <div data-debug-mode="true" style="color: red; background-color: green;">
         <ul id="list-container">
             <li id="item-1"><a id="link" href="https://github.com">Link</a></li>
-            <li id="item-1">Text</li>
+            <li id="item-2">Text</li>
         </ul>
     </div>`);
     //expect the result to be equal to the expected object
@@ -16,7 +16,7 @@ it('Should parse the most basic html string to an valid JSON schema', () => {
         "elmType": "div",
         "style": {
             "color": "red",
-            "backgroundColor": "green"
+            "background-color": "green"
         },
         "children": [
             {
@@ -27,13 +27,10 @@ it('Should parse the most basic html string to an valid JSON schema', () => {
                         "children": [
                             {
                                 "elmType": "a",
-                                "style": {},
                                 "attributes": {
                                     "href": "https://github.com"
                                 },
-                                "children": [
-                                    "Item 1"
-                                ]
+                                "txtContent": "Link"
                             }
                         ]
                     },

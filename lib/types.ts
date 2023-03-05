@@ -6,9 +6,14 @@ export type FormatterOptions = {
     elmType: ElementTypes,
     /**An unique identifier for each element, this will be removed when the JSON schema is generated. 
      * 
-     *It's necessary, since it helps the builder and the HTML parser to keep track of the elements and their children, for modifications and other operations.
+     *It helps the builder and the HTML parser to keep track of the elements and their children, for modifications and other operations.
     */
-    id: string;
+    id?: string;
+    /** An optional property that specifies the text content of the element specified by `elmType`. The value of this property can either be a string (including special strings) or an Expression object.
+     * 
+     * If an element has the txtContent property, the child properties are ignored.
+     */
+    txtContent?: string;
     attributes?: AttributesConfig;
     style?: StylesConfig;
     /**An optional property that is meant for debugging. It outputs error messages and logs warnings to the console. */
@@ -173,7 +178,6 @@ export interface ChildrenState<Builder> {
         config: FormatterOptions,
         callback?: (builder: ChildrenState<Builder>) => ChildrenState<Builder>
     ): this;
-    addText(text: string): this;
     addChildren: (builder: Builder) => ChildrenState<Builder>;
     build: () => Record<string, any>;
 }
