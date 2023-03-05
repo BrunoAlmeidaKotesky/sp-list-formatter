@@ -3,9 +3,9 @@ import {HtmlToListParser} from '../lib/modules/HtmlToListParser';
 it('Should parse the most basic html string to an valid JSON schema', () => {
     const result = new HtmlToListParser().parse(`
     <div style="color: red; background-color: green;">
-        <ul>
-            <li><a href="https://github.com">Item 1</a></li>
-            <li>Text</li>
+        <ul id="list-container">
+            <li id="item-1"><a id="link" href="https://github.com">Link</a></li>
+            <li id="item-1">Text</li>
         </ul>
     </div>`);
     //expect the result to be equal to the expected object

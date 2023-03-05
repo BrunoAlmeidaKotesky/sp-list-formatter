@@ -8,15 +8,34 @@ export class ListFormatterBuilder {
     static init(elmType: ElementTypes, config?: Omit<FormatterOptions, 'elmType'>): ListFormatterBuilder {
         const builder = new ListFormatterBuilder();
         builder.result.elmType = elmType;
-        ListFormatterBuilder.configFields(builder.result, config as FormatterOptions);
+        ListFormatterBuilder.#configFields(builder.result, config as FormatterOptions);
         return builder as unknown as ListFormatterBuilder & InitialState<ListFormatterBuilder>;
     }
 
-    private static configFields(obj: Record<string, any>, config: FormatterOptions) {
+    static #configFields(obj: Record<string, any>, config: FormatterOptions) {
         if(!config) return;
         Object.entries(config).forEach(([key, value]) => {
             obj[key] = value;
         });
+    }
+
+    findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): Record<string, any> {
+        let result: Record<string, any> = this.result;
+        const search = (node: Record<string, any>) => {
+            if(node?.id === id) {
+                result = node;
+                if(result && modifyCb) 
+                    modifyCb(result as JsonSchema);
+                return
+            }
+            if(node?.children) {
+                node?.children?.forEach((child: Record<string, any>) => {
+                    search(child);
+                });
+            }
+        }
+         search(this.result);
+        return result;
     }
 
     addElement(
@@ -27,7 +46,7 @@ export class ListFormatterBuilder {
             this.result.children = [];
         }
         const element: Record<string, any> = { elmType: config.elmType };
-        ListFormatterBuilder.configFields(element, config);
+        ListFormatterBuilder.#configFields(element, config);
         if (callback) {
             const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
             //@ts-ignore
@@ -58,7 +77,17 @@ export class ListFormatterBuilder {
         return this;
     }
 
+    #deleteIds(result: Record<string, any>) {
+        if(result.id) delete result.id;
+        if(result.children) {
+            result.children.forEach((child: Record<string, any>) => {
+                this.#deleteIds(child);
+            });
+        }
+    }
+
     build(): JsonSchema {
+        this.#deleteIds(this.result);
         return this.result as JsonSchema;
     }
 }

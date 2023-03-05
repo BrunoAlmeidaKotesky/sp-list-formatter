@@ -4,6 +4,11 @@ export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;
 export type FormatterOptions = {
     elmType: ElementTypes,
+    /**An unique identifier for each element, this will be removed when the JSON schema is generated. 
+     * 
+     *It's necessary, since it helps the builder and the HTML parser to keep track of the elements and their children, for modifications and other operations.
+    */
+    id: string;
     attributes?: AttributesConfig;
     style?: StylesConfig;
     /**An optional property that is meant for debugging. It outputs error messages and logs warnings to the console. */
@@ -40,7 +45,7 @@ export type FormatterOptions = {
 };
 
 interface BaseSchema {
-    $schema: string, children?: JsonSchema[] 
+    $schema: string, children?: JsonSchema[], txtContent?: string;
 }
 export interface JsonSchema extends FormatterOptions, BaseSchema {};
 
@@ -167,7 +172,8 @@ export interface ChildrenState<Builder> {
     addElement(
         config: FormatterOptions,
         callback?: (builder: ChildrenState<Builder>) => ChildrenState<Builder>
-    ): this
+    ): this;
+    addText(text: string): this;
     addChildren: (builder: Builder) => ChildrenState<Builder>;
     build: () => Record<string, any>;
 }
