@@ -4,8 +4,11 @@ import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '
 
 export class ListFormatterBuilder {
     public result: Record<string, any> = { $schema: SCHEMA };
-    public removeId = false;
+    public removeId = true;
 
+    /**The type narrowing inference it's not working properly, the only methods that you can use is `addElement` and `addChildren`
+     * which is the same as `ChildrenState` interface.
+    */
     static init(elmType: ElementTypes, config?: Omit<FormatterOptions, 'elmType'>): ListFormatterBuilder {
         const builder = new ListFormatterBuilder();
         builder.result.elmType = elmType;
@@ -50,8 +53,10 @@ export class ListFormatterBuilder {
         if (callback) {
             const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
             //@ts-ignore
-            if(!element.txtContent)
+            if(!element.txtContent) {
+                this.removeId = false;
                 element.children = childBuilder.build().children;
+            }
         }
         this.result.children.push(element);
         return this as unknown as ChildrenState<ListFormatterBuilder>;
@@ -64,8 +69,10 @@ export class ListFormatterBuilder {
             this.result.children = [];
         const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
         //@ts-ignore
-        if(!this.result?.txtContent)
+        if(!this.result?.txtContent) {
+            this.removeId = false;
             this.result.children.push(...childBuilder.build().children);
+        }
         return this;
     }
 

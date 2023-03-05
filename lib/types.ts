@@ -163,15 +163,8 @@ export type Operands = {operator: Operators, operands: Operands}[] | string | an
 
 export interface InitialState<Builder> {
     addChildren: (builder: Builder) => ChildrenState<Builder>;
+    addElement: (config: FormatterOptions) => ChildrenState<Builder>;
 }
-
-/*interface ElementState {
-    addElement(
-        config: FormatterOptions,
-        callback?: (builder: ChildrenState) => ChildrenState
-    ): this
-    addChildren: (builder: ListFormatterBuilder) => ChildrenState;
-}*/
 
 export interface ChildrenState<Builder> {
     addElement(

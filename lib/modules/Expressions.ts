@@ -1,14 +1,38 @@
-import type { Operators, Operands, FormatterOptions } from '../types';
+import type { Operators, Operands } from '../types';
 
 type Condition = `${string} ${Operators} ${string}`;
+type ComparisonOperation = {operator: Operators, operands: [Operands, Operands]};
 export class Expressions {
     static If(
         condition: Condition,
         trueValue: string,
         falseValue: string,
+        /**Set this to true if your `if` is not at the beginning of the expression (string). */
         removeEq = false
     ): string {
         return `=if(${condition}, ${trueValue}, ${falseValue}`.replace('=', removeEq ? '' : '=');
+    }
+
+    static And(...operands: Operands[]): [Operators, Operands] {
+        return ["&&", operands];
+    }
+
+    static Or(...operands: Operands[]): [Operators, Operands] {
+        return ["||", operands];
+    }
+
+    static Equals(leftOperand: Operands, rightOperand: Operands): ComparisonOperation {
+        return {
+            operator: "==",
+            operands: [leftOperand, rightOperand]
+        };
+    }
+
+    static NotEquals(leftOperand: Operands, rightOperand: Operands): ComparisonOperation {
+        return {
+            operator: "!=",
+            operands: [leftOperand, rightOperand]
+        };
     }
 }
 
@@ -33,7 +57,9 @@ export const FIELD_HELPERS = {
     UILCID: "@UIlcid"
 } as const;
 
-function createStateMachine<States extends string, TagIds extends string>(
+/*
+Proposal state machine for the new expression builder:
+function function createStateMachine<States extends string, TagIds extends string>(
     events: {
         for: [States, TagIds, FormatterOptions][],
         transitions: Array<{
@@ -45,24 +71,4 @@ function createStateMachine<States extends string, TagIds extends string>(
             }
         }>
     }
-) {
-    //Implement that
-    for (const [state, tagId, config] of events.for) {
-        // ...
-    }
-}
-
-const t = createStateMachine<"A" | "D", "div1">({
-    for: [
-        ["A", "div1", {}],
-        ["D", "div1", {}]
-    ],
-    transitions: [{
-        from: "A",
-        to: "D",
-        when: {
-            operator: "==",
-            operands: ["@currentField", "x"]
-        }
-    }]
-})
+)*/
