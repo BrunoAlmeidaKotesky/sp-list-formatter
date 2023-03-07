@@ -77,7 +77,7 @@ export class HtmlToListParser {
         childNodes.forEach((childNode: any) => this.#processNode(childNode, builder));
     }
 
-    #addChild = (parentNode: ParentNode) => (currentBuilder: ChildrenState<ListFormatterBuilder>) => {
+    #addChild = (parentNode: ParentNode) => (currentBuilder: ChildrenState) => {
         parentNode.childNodes.forEach(childNode => {
             this.#processNodeCount += 1
             this.#processNode(childNode as Element, currentBuilder as unknown as ListFormatterBuilder);

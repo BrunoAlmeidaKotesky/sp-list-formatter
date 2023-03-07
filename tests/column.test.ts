@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { ListFormatterBuilder, SchemaToHtmlParser } from '../lib/index';
+import {ListFormatterBuilder, SchemaToHtmlParser } from '../lib/index';
 
 it('Should generate the most basic column formatting', () => {
     const result = ListFormatterBuilder.init('div')

@@ -1,4 +1,5 @@
 import type { Attributes, Styles, ElementTypes } from "./modules/constants";
+import type { ListFormatterBuilder } from "./modules/ListFormatterBuilder";
 
 export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;
@@ -161,16 +162,17 @@ export type Operators =
 
 export type Operands = {operator: Operators, operands: Operands}[] | string | any[];
 
-export interface InitialState<Builder> {
-    addChildren: (builder: Builder) => ChildrenState<Builder>;
-    addElement: (config: FormatterOptions) => ChildrenState<Builder>;
+export type AddChildren = (builder: ListFormatterBuilder) => ChildrenState;
+export type AddElement<T = ChildrenState> = (config: FormatterOptions,
+    callback?: (builder: ChildrenState) => ChildrenState
+) => T;
+export interface InitialState {
+    addChildren: AddChildren;
+    addElement: AddElement;
 }
 
-export interface ChildrenState<Builder> {
-    addElement(
-        config: FormatterOptions,
-        callback?: (builder: ChildrenState<Builder>) => ChildrenState<Builder>
-    ): this;
-    addChildren: (builder: Builder) => ChildrenState<Builder>;
+export interface ChildrenState {
+    addElement: AddElement;
+    addChildren: AddChildren;
     build: () => Record<string, any>;
 }

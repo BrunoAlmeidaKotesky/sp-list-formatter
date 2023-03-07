@@ -13,7 +13,7 @@ export class ListFormatterBuilder {
         const builder = new ListFormatterBuilder();
         builder.result.elmType = elmType;
         ListFormatterBuilder.#configFields(builder.result, config as FormatterOptions);
-        return builder as unknown as ListFormatterBuilder & InitialState<ListFormatterBuilder>;
+        return builder as unknown as ListFormatterBuilder & InitialState;
     }
 
     static #configFields(obj: Record<string, any>, config: FormatterOptions) {
@@ -44,14 +44,14 @@ export class ListFormatterBuilder {
 
     addElement(
         config: FormatterOptions,
-        callback?: (builder: ChildrenState<ListFormatterBuilder>) => ChildrenState<ListFormatterBuilder>
-    ): ChildrenState<ListFormatterBuilder> {
+        callback?: (builder: ChildrenState) => ChildrenState
+    ): ChildrenState {
         if (!this.result.children && !this.result?.txtContent)
             this.result.children = [];
         const element: Record<string, any> = { elmType: config.elmType };
         ListFormatterBuilder.#configFields(element, config);
         if (callback) {
-            const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
+            const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState);
             //@ts-ignore
             if(!element.txtContent) {
                 this.removeId = false;
@@ -59,15 +59,15 @@ export class ListFormatterBuilder {
             }
         }
         this.result.children.push(element);
-        return this as unknown as ChildrenState<ListFormatterBuilder>;
+        return this as unknown as ChildrenState;
     }
 
     addChildren(
-        callback: (builder: ChildrenState<ListFormatterBuilder>) => ChildrenState<ListFormatterBuilder>
+        callback: (builder: ChildrenState) => ChildrenState
     ): this {
         if (!this.result.children && !this.result?.txtContent)
             this.result.children = [];
-        const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState<ListFormatterBuilder>);
+        const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState);
         //@ts-ignore
         if(!this.result?.txtContent) {
             this.removeId = false;
