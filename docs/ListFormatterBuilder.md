@@ -8,13 +8,13 @@ If you don't feel like using the fluent API, you can use the [`HtmlToListParser`
 
 The class consists of a fluent API with type narrowing, so you can only call methods that are available in the current state. For example, if you call `init`, you **should** only call `addElement` or `addChildren`, and with `addElement` you can only call `addChildren`, `addElement` or `build` to generate the JSON schema.
 
-* **`init`** You **must not** instantiate the class directly, instead you must call the static `init` method. It receives the root element type as first parameter and the second parameter is optional and is the rest of that div configuration of type [`FormatterOptions`]() without `elmType`.
+* **`init`** You **must not** instantiate the class directly, instead you must call the static `init` method. It receives the root element type as first parameter and the second parameter is optional and is the rest of that div configuration of type [`FormatterOptions`](./ConstantsAndTypes.md#formatteroptions) without `elmType`.
 
-* **`addElement`** receives two parameters: a configuration of the type [`FormatterOptions`]() which represent most of the SharePoint syntax options allowed, and a callback that receives the current state of the builder and returns the next state. This callback is used to add children to the current element, or add another element to the same level.
+* **`addElement`** receives two parameters: a configuration of the type [`FormatterOptions`](./ConstantsAndTypes.md#formatteroptions) which represent most of the SharePoint syntax options allowed, and a callback that receives the current state of the builder and returns the next state. This callback is used to add children to the current element, or add another element to the same level.
 
 * **`addChildren`** Can be used to add children to the current element. It receives a callback that receives the current state of the builder and returns the next state. This callback is used to add children to the current element, or add another element to the same level. 
 
-* **`build`** returns the final JSON schema of type [`JsonSchema`]() for the list formatter.
+* **`build`** returns the final JSON schema of type [`JsonSchema`](./ConstantsAndTypes.md#jsonschema) for the list formatter.
 
 Using `addChildren` or the callback on `addElement` to add children to the current element is the same thing, it's just a matter of preference.
 
@@ -48,7 +48,7 @@ Using `addChildren` or the callback on `addElement` to add children to the curre
     </details>
 
     <details>
-    <summary>That will log the following JSON:
+    <summary>JSON Output:
     </summary>
 
 
@@ -119,7 +119,4 @@ Using `addChildren` or the callback on `addElement` to add children to the curre
     </details>
 
 #### Notes:
-- Although the properties `removeId` and `result`, and the method `findNodeById` are marked as public, you **must not** use them, they are used internally by the class and by [`HtmlToListParser`]().
-
-##### To do:
-    - Add more complex examples.
+- Although the properties `removeId` and `result`, and the method `findNodeById` are marked as public, you **must not** use them, they are used internally by the class and by [`HtmlToListParser`](./HtmlToListParser.md).

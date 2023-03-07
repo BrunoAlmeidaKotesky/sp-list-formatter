@@ -1,13 +1,4 @@
-import type { JsonSchema } from '../types';
-
-export interface HTMLListSchema extends Omit<
-    JsonSchema, 
-    'operands' | 'operator' | 'filePreviewProps' | 'inlineEditField' | 
-    'defaultHoverField' | 'customCardProps' |  'children' |
-    'customRowAction' | 'forEach' | 'debugMode' | '$schema' 
-> {
-    children: HTMLListSchema[];
-};
+import type { JsonSchema, HTMLListSchema } from '../types';
 
 export class SchemaToHtmlParser {
     constructor(
@@ -16,7 +7,8 @@ export class SchemaToHtmlParser {
         private parsedSchema?: HTMLListSchema) {
             this.schemaAdapter = this.schemaAdapter.bind(this);
         }
-
+    
+    /**Convert a `JsonSchema` object to `HTMLListSchema`, recursively.*/
     schemaAdapter(schema: JsonSchema): HTMLListSchema {
         const newSchema = {} as HTMLListSchema;
         const keys: Array<keyof HTMLListSchema> = ['id', 'elmType', 'attributes', 'style', 'txtContent', 'children'];

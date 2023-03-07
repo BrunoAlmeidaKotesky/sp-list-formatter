@@ -50,10 +50,19 @@ export type FormatterOptions = {
     operands?: Operands;
 };
 
-interface BaseSchema {
+export interface BaseSchema {
     $schema: string, children?: JsonSchema[], txtContent?: string;
 }
 export interface JsonSchema extends FormatterOptions, BaseSchema {};
+
+export interface HTMLListSchema extends Omit<
+    JsonSchema, 
+    'operands' | 'operator' | 'filePreviewProps' | 'inlineEditField' | 
+    'defaultHoverField' | 'customCardProps' |  'children' |
+    'customRowAction' | 'forEach' | 'debugMode' | '$schema' 
+> {
+    children: HTMLListSchema[];
+};
 
 export interface DefaultClickAction {
     action: "defaultClick" | "share" | "delete" | "editProps" | "openContextMenu";
@@ -166,6 +175,7 @@ export type AddChildren = (builder: ListFormatterBuilder) => ChildrenState;
 export type AddElement<T = ChildrenState> = (config: FormatterOptions,
     callback?: (builder: ChildrenState) => ChildrenState
 ) => T;
+/**Don't work properly, probably because init is static */
 export interface InitialState {
     addChildren: AddChildren;
     addElement: AddElement;
