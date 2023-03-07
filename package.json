@@ -3,8 +3,8 @@
   "private": false,
   "version": "1.0.1",
   "type": "module",
-  "main": "./dist/sp-list-formatter.js",
-  "module": "./dist/sp-list-formatter.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "files": ["dist"],
   "scripts": {
     "dev": "vite",

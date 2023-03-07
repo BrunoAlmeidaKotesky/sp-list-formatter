@@ -12,7 +12,7 @@ export default defineConfig({
             entry: "lib/index.ts",
             name: "SPColumnFormatter",
             formats: ['es'],
-            fileName: 'sp-list-formatter'
+            fileName: 'index'
         },
         rollupOptions: {
             external: ["sp-formatters"],
