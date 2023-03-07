@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./dist/sp-list-formatter.js",
   "module": "./dist/sp-list-formatter.js",
+  "files": ["dist"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
