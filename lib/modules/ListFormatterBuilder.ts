@@ -1,5 +1,5 @@
-import { SCHEMA } from "../constants";
-import type { ElementTypes } from '../constants';
+import { SCHEMA } from "./constants";
+import type { ElementTypes } from './constants';
 import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '../types';
 
 export class ListFormatterBuilder {

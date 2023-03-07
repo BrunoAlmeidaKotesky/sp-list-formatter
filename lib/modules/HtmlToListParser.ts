@@ -1,8 +1,8 @@
 
 import { parse, ParserOptions } from 'parse5';
 import { ListFormatterBuilder } from './ListFormatterBuilder';
-import { ATTRIBUTES, ATTRIBUTES_MAP, DATA_ATRIBUTES, SCHEMA } from '../constants';
-import type { Attributes, ElementTypes, DataAttributes } from '../constants';
+import { ATTRIBUTES, ATTRIBUTES_MAP, DATA_ATRIBUTES, SCHEMA } from './constants';
+import type { Attributes, ElementTypes, DataAttributes } from './constants';
 import type { TextNode, Element, DefaultTreeAdapterMap, ChildNode, ParentNode } from 'parse5/dist/tree-adapters/default';
 import type { AttributesConfig, FormatterOptions, StylesConfig, JsonSchema, ChildrenState } from '../types';
 import type { Attribute } from 'parse5/dist/common/token';

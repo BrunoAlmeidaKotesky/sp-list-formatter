@@ -3,14 +3,14 @@ import { ListFormatterBuilder, SchemaToHtmlParser } from '../lib/index';
 
 it('Should generate the most basic column formatting', () => {
     const result = ListFormatterBuilder.init('div')
-        .addChildren(child =>
-            child
-                .addElement({ elmType: 'div', style: { "background-color": "black" } }, (div) =>
-                    div.addElement({ elmType: 'span', style: { color: 'black' } },
-                        (child) => child.addElement({ elmType: 'a', id: "link1", txtContent: "Link text" }, tag => tag.addElement({elmType: 'span'})).addElement({ elmType: 'img' })
-                    )
+        .addChildren(child => child
+            .addElement({ elmType: 'div', style: { "background-color": "black" }}, child =>
+                child.addElement({ elmType: 'span', style: { color: 'black' } }, child => 
+                    child.addElement({ elmType: 'a', id: "link1", txtContent: "Link text" }, 
+                        child => child.addElement({elmType: 'span'})).addElement({ elmType: 'img' })
                 )
-                .addElement({ elmType: 'div', txtContent: 'Text 1' })
+            )
+            .addElement({ elmType: 'div', txtContent: 'Text 1' })
         )
         .addChildren(c => c.addElement({ elmType: 'span', txtContent: 'Text 2'  }))
         .build();

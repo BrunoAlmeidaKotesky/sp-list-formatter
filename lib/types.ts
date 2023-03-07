@@ -1,4 +1,4 @@
-import type { Attributes, Styles, ElementTypes } from "./constants";
+import type { Attributes, Styles, ElementTypes } from "./modules/constants";
 
 export type AttributesConfig = Partial<Record<Attributes, string>>;
 export type StylesConfig = Partial<Record<Styles, string>>;

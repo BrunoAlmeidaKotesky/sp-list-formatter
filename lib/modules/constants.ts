@@ -1,4 +1,4 @@
-import type { FormatterOptions } from "./types";
+import type { FormatterOptions } from "../types";
 
 export const ELEMENT_TYPES = [
     'div',
@@ -196,6 +196,37 @@ export const ATTRIBUTES_MAP = new Map<DataAttributes, keyof FormatterOptions>([
 ]);
 
 export const SCHEMA = "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json";
+
+export const FIELD_HELPERS = {
+    CURRENT_FIELD: "@currentField",
+    CURRENT_FIELD_VALUE: (value: string | string[]) => {
+        if(Array.isArray(value))
+            return `@currentFieldValue.${value.join(".")}` as const;
+        return `@currentFieldValue.${value}` as const;
+    },
+    ME: "@me",
+    FIELD: (name: string) => `\$[${name}]` as const,
+    FIELD_VALUE: (value: string | string[]) => {
+        if(Array.isArray(value))
+            return `\[$${value.join(".")}]` as const;
+        return `\[$${value}]` as const;
+    },
+    CURRENT_WEB: "@currentWeb",
+    NOW: "@now",
+    ROW_IDX: "@rowIndex",
+    WIN_HEIGHT: "@window.innerHeight",
+    WIN_WIDTH: "@window.innerWidth",
+    THUMBNAILS: {
+        SMALL: "@thumbnails.small",
+        MEDIUM: "@thumbnails.medium",
+        LARGE: "@thumbnails.large",
+        SIZE: (size: number) => `@thumbnails.${size}` as const,
+        SIZE_WH: (width: number, height: number) => `@thumbnails.${width}x${height}` as const
+    },
+    IS_SELECTED: "@isSelected",
+    LCID: "@lcid",
+    UILCID: "@UIlcid"
+} as const;
 
 export type Styles = typeof STYLES[number];
 export type ElementTypes = typeof ELEMENT_TYPES[number];
