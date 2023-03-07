@@ -1,8 +1,10 @@
 {
   "name": "sp-list-formatter",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.9",
   "type": "module",
+  "main": "./dist/sp-list-formatter.js",
+  "module": "./dist/sp-list-formatter.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -18,5 +20,10 @@
   },
   "dependencies": {
     "parse5": "^7.1.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/sp-list-formatter.js"
+    }
   }
 }
