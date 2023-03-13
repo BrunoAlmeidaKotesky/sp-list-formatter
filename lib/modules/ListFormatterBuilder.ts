@@ -1,8 +1,7 @@
 import { SCHEMA } from "./constants";
 import type { ElementTypes } from './constants';
-import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '../types';
+import type { FormatterOptions, InitialState, ChildrenState, JsonSchema, ResultObj } from '../types';
 
-type ResultObj = Partial<JsonSchema> & {children?: Partial<JsonSchema>[]};
 export class ListFormatterBuilder {
     public result: ResultObj= { $schema: SCHEMA };
     public removeId = true;
@@ -24,13 +23,13 @@ export class ListFormatterBuilder {
         });
     }
 
-    public findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): ResultObj {
+    public findNodeById<ModifiedFoundNodeType = JsonSchema>(id: string, modifyCb?: (foundNode: ModifiedFoundNodeType) => void): ResultObj {
         let result: ResultObj = this.result;
         const search = (node: ResultObj) => {
             if(node?.id === id) {
                 result = node;
                 if(result && modifyCb) 
-                    modifyCb(result as JsonSchema);
+                    modifyCb(result as ModifiedFoundNodeType);
                 return
             }
             if(node?.children) {

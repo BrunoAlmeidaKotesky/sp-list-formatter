@@ -1,4 +1,4 @@
-import type { ChildrenState, FormatterOptions, Operands, Operators } from "../types"
+import type { ChildrenState, FormatterOptions, Operands, Operators, ResultObj } from "../types"
 import { ListFormatterBuilder } from "./ListFormatterBuilder"
 
 type ForStates<States extends string, TagIds extends string> = [TagIds, States, Omit<FormatterOptions, 'elmType'>][];
@@ -44,7 +44,24 @@ function createStateMachine<States extends string, TagIds extends string>(
     }
 
     for (const [tagId, data] of [...stateEventMap]) {
-        const resultObj = (builderInstance as ListFormatterBuilder).findNodeById(tagId);
+        const resultObj = (builderInstance as ListFormatterBuilder).findNodeById<{elmType: 'clone', states: ResultObj[]}>(tagId, (foundItem => {
+            if(!foundItem) return;
+            const originalItem = { ...foundItem } as unknown as ResultObj;
+            console.log(data);
+            foundItem = {
+                elmType: 'clone',
+                states: data.states.map(state => {
+
+                    return {
+                        ...originalItem,
+                        style: {
+                            ...originalItem?.style,
+                            display: '' //Find the transition to thsi state, and take the expression from `when` and apply to the display
+                        }
+                    }
+                })
+            }
+        }));
         if(!resultObj) {
             console.error(`No element with id ${tagId} found, states will not be applied to this element.`);
             continue;

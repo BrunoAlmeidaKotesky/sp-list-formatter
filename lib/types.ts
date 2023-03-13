@@ -64,6 +64,8 @@ export interface HTMLListSchema extends Omit<
     children: HTMLListSchema[];
 };
 
+export type ResultObj = Partial<JsonSchema> & {children?: Partial<JsonSchema>[]};
+
 export interface DefaultClickAction {
     action: "defaultClick" | "share" | "delete" | "editProps" | "openContextMenu";
 }
