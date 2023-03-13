@@ -2,8 +2,9 @@ import { SCHEMA } from "./constants";
 import type { ElementTypes } from './constants';
 import type { FormatterOptions, InitialState, ChildrenState, JsonSchema } from '../types';
 
+type ResultObj = Partial<JsonSchema> & {children?: Partial<JsonSchema>[]};
 export class ListFormatterBuilder {
-    public result: Record<string, any> = { $schema: SCHEMA };
+    public result: ResultObj= { $schema: SCHEMA };
     public removeId = true;
 
     /**The type narrowing inference it's not working properly, the only methods that you can use is `addElement` and `addChildren`
@@ -23,9 +24,9 @@ export class ListFormatterBuilder {
         });
     }
 
-    public findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): Record<string, any> {
-        let result: Record<string, any> = this.result;
-        const search = (node: Record<string, any>) => {
+    public findNodeById(id: string, modifyCb?: (foundNode: JsonSchema) => void): ResultObj {
+        let result: ResultObj = this.result;
+        const search = (node: ResultObj) => {
             if(node?.id === id) {
                 result = node;
                 if(result && modifyCb) 
@@ -33,12 +34,12 @@ export class ListFormatterBuilder {
                 return
             }
             if(node?.children) {
-                node?.children?.forEach((child: Record<string, any>) => {
+                node?.children?.forEach((child: ResultObj) => {
                     search(child);
                 });
             }
         }
-         search(this.result);
+        search(this.result);
         return result;
     }
 
@@ -48,7 +49,7 @@ export class ListFormatterBuilder {
     ): ChildrenState {
         if (!this.result.children && !this.result?.txtContent)
             this.result.children = [];
-        const element: Record<string, any> = { elmType: config.elmType };
+        const element: Partial<JsonSchema> = { elmType: config.elmType };
         ListFormatterBuilder.#configFields(element, config);
         if (callback) {
             const childBuilder = callback(new ListFormatterBuilder() as unknown as ChildrenState);
@@ -58,7 +59,7 @@ export class ListFormatterBuilder {
                 element.children = childBuilder.build().children;
             }
         }
-        this.result.children.push(element);
+        this?.result?.children?.push(element);
         return this as unknown as ChildrenState;
     }
 
@@ -71,15 +72,16 @@ export class ListFormatterBuilder {
         //@ts-ignore
         if(!this.result?.txtContent) {
             this.removeId = false;
+            //@ts-ignore
             this.result.children.push(...childBuilder.build().children);
         }
         return this;
     }
 
-    #deleteIds(result: Record<string, any>) {
+    #deleteIds(result: ResultObj) {
         if(result.id) delete result.id;
         if(result.children) {
-            result.children.forEach((child: Record<string, any>) => {
+            result.children.forEach((child: ResultObj) => {
                 this.#deleteIds(child);
             });
         }
